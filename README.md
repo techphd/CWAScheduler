@@ -6,9 +6,7 @@ SUMMARY
 
 	These are the user instructions for running the Symposium Scheduler.
 	
-	Here is a link to the
-	[documentation:](documentation)
-	[javadocs:](https://rawgit.com/techphd/CWAScheduler/master/documentation/javadoc/index.html)
+	Here is a link to the [documentation](documentation) and [javadocs](https://rawgit.com/techphd/CWAScheduler/master/documentation/javadoc/index.html)
 
 
 REQUIREMENTS
