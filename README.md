@@ -1,17 +1,21 @@
 SUMMARY
 -------
 
-	The Symposium Scheduler is used to schedule panels that have some 
+	The CWA (Symposium) Scheduler is used to schedule panels that have some 
 	constraints on them into venues across time slots. 
 
 	These are the user instructions for running the Symposium Scheduler.
+	
+	Here is a link to the
+	[documentation:](documentation)
+	[javadocs:](https://rawgit.com/techphd/CWAScheduler/master/documentation/javadoc/index.html)
 
 
 REQUIREMENTS
 ------------
 
 	In order to run the scheduler, you will need 
-	1) Symposium
+	1) CWAScheduler.jar
 	2) A properly formatted JSON file containing the necessary information
 		(More on this under Input Formatting)
 
@@ -19,15 +23,15 @@ REQUIREMENTS
 INSTALLATION
 ------------
 	
-	Simply double click Symposium to run the algorithm after ensuring 
+	Build and create the out/production/CWAScheduler.jar double click the jar file to run the algorithm after ensuring 
 	all requirements have been met.
 	
 RUN
 ------------
 	There is a three options to running the application. The first one is double
-	click Symposium.jar to get a user interface. The other two options are using the command line as follows:
-	$ Symposium input.json
-	$ Symposium input.json output.json
+	click CWAScheduler.jar to get a user interface. The other two options are using the command line as follows:
+	$ CWAScheduler.jar input.json
+	$ CWAScheduler.jar input.json output.json
  
 
 INPUT FORMATTING
