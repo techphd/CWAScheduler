@@ -2,13 +2,16 @@ package symposium;
 
 import symposium.model.*;
 
+import java.io.IOException;
 import java.util.*;
+
+import org.json.simple.parser.ParseException;
 
 public class Main {
 
     public static void main(String[] args) {
         boolean evolutionFlag = false;
-        String inputFilePath = "datas/data2016.json"; // default file
+        String inputFilePath = "datas/data2017.json"; // default file
         for (String arg: args) {
             if (arg.equals("--evolution")) {
                 evolutionFlag = true;
@@ -33,7 +36,12 @@ public class Main {
         diffValues[4] = 100; // Panelist
 
         // Reading parsing json files
-        Parser.parse(inputFilePath);
+        try {
+					Parser.parse(inputFilePath);
+				} catch (IOException | ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
         // Schedule data is initiated
 
         DummyScheduler bs = new DummyScheduler(diffValues);
@@ -74,7 +82,12 @@ public class Main {
                     provisionaladjustment[j][k] = (int) Math.round(Math.random());
                 }
 
-                Parser.parse(inputFilePath);
+                try {
+									Parser.parse(inputFilePath);
+								} catch (IOException | ParseException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
                 // Schedule data is initiated
                 for (int m = 0; m < adjust.length; m++) {
                     adjust[m] = adjust[m] * (int) Math.pow(8, provisionaladjustment[j][m]);

@@ -5,6 +5,10 @@ import symposium.model.Panel;
 import symposium.model.ScheduleData;
 import static org.junit.Assert.*;
 
+import java.io.IOException;
+
+import org.json.simple.parser.ParseException;
+
 public class DummySchedulerTest {
     @Test
     public void testMakeSchedule() throws Exception {
@@ -80,7 +84,12 @@ public class DummySchedulerTest {
         diffValues[3] = 10000000;
         diffValues[4] = 100;
 
-        Parser.parse(inputFilePath);
+        try {
+					Parser.parse(inputFilePath);
+				} catch (IOException | ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 
         DummyScheduler bs = new DummyScheduler(diffValues);
         bs.makeSchedule();

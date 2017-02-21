@@ -26,10 +26,17 @@ INSTALLATION
 	
 RUN
 ------------
-	There is a three options to running the application. The first one is double
-	click CWAScheduler.jar to get a user interface. The other two options are using the command line as follows:
-	$ CWAScheduler.jar input.json
-	$ CWAScheduler.jar input.json output.json
+	Double clicking the CWAScheduler.jar from (UI File Browser), the using interface will open.
+
+	The other options is using the command line as follows:
+	Note: putting java -jar is optional but without it the program runs in background with no console to send the output to.
+	Open the GUI just like the double click previously described
+	$ java -jar CWAScheduler.jar
+	Use the command line version with no GUI
+	Specify the input file and output goes to console
+	$ java -jar CWAScheduler.jar input.json
+	Specify the input and output file and output goes to file specified
+	$ java -jar CWAScheduler.jar input.json output.json
  
 
 INPUT FORMATTING
@@ -44,8 +51,7 @@ INPUT FORMATTING
 	1) whitespace is not needed and
 	2) replace any word in ALL CAPS by an actual value
 	3) "..." indicates that this pattern can go on indefinitely. 
-	4) All times (00:00-00:00) are 24-hour based and must always have 4 
-		digits seperated by a ":"
+	4) All times (00:00-00:00) are 24-hour based and must always have 2 	digits for the hour separated by a ":" and then 2 digs for the minutes with a "-" between the start and end time
 
 	{
 		"Venues":[
@@ -154,34 +160,34 @@ CONSTRAINTS
 	
 	What is between the quotes must be put instead of the CONSTRAINT above
 			
-	“New-Panelist”: This constraint indicates that the panel includes a panelist who
+	"New-Panelist": This constraint indicates that the panel includes a panelist who
 	is new to the conference.
 			
-	“Paired-Panelists”: This constraint is to prevent any two panelists from 
+	"Paired-Panelists": This constraint is to prevent any two panelists from 
 	appearing together twice or more in a single day.
 	
 	"Single-Category": This constraint is to prevent any panels having the same 
 	category from appearing at the same time.
 	 
-	“Max-Panels(MAX_NUMBER)”: This constraint is to prevent a panelist from 
+	"Max-Panels(MAX_NUMBER)": This constraint is to prevent a panelist from 
 	appearing more than the MAX_NUMBER of times per day. MAX_NUMBER should be 
 	replaced with a number.
 	
-	“Min-Panels()”: This filter prioritizes scheduling panelists in days they 
+	"Min-Panels()": This filter prioritizes scheduling panelists in days they 
 	haven’t been assigned yet.
 			
-	“Minimum-Capacity(MINIMUM_SIZE)”: This constraint is for the panel to be 
+	"Minimum-Capacity(MINIMUM_SIZE)": This constraint is for the panel to be 
 	scheduled at a room with at least size MINIMUM_SIZE. MAX_NUMBER should be 
 	replaced with a number.
 			
-	“Availability”: This constraint is to prevent a panel from being scheduled at a 
+	"Availability": This constraint is to prevent a panel from being scheduled at a 
 	time where one or more panelists on the panel are not available.
 			
-	“Venue(VENUE_NAME)”: This constraint is to schedule a panel at the given 
+	"Venue(VENUE_NAME)": This constraint is to schedule a panel at the given 
 	VENUE_NAME. VENUE_NAME must be replaced by the name of the venue, and it must 
 	be declared as a venue.
 			
-	“Time(DAY_NUMBER;00:00)”: This constraint is to schedule a panel at the given 
+	"Time(DAY_NUMBER;00:00)": This constraint is to schedule a panel at the given 
 	time. DAY_NUMBER is the number of the day for the panel to be scheduled at. 
 
 
@@ -198,7 +204,7 @@ OUTPUT FORMAT
 				"Panel":"PANEL_NAME",
 					"Messages":[
 						"MESSAGE1",
-						“MESSAGE2“,
+						"MESSAGE2",
 						...
 					],
 				"Venue":"VENUE_NAME",
@@ -208,7 +214,7 @@ OUTPUT FORMAT
 				"Panel":"PANEL_NAME",
 					"Messages":[
 						"MESSAGE1",
-						“MESSAGE2“,
+						"MESSAGE2",
 						...
 					],
 				"Venue":"VENUE_NAME",
@@ -216,9 +222,9 @@ OUTPUT FORMAT
 			},
 			...
 		],
-		“Messages”:[ 
+		"Messages":[ 
 			"MESSAGE1",
-			“MESSAGE2“,
+			"MESSAGE2",
 			... 
 		],	
 		"Unscheduled":[
@@ -226,7 +232,7 @@ OUTPUT FORMAT
 				"Panel":"PANEL_NAME",
 				"Messages":[
 					"MESSAGE1",
-					“MESSAGE2“,
+					"MESSAGE2",
 					...
 				]
 			},
@@ -234,7 +240,7 @@ OUTPUT FORMAT
 				"Panel":"PANEL_NAME",
 				"Messages":[
 					"MESSAGE1",
-					“MESSAGE2“,
+					"MESSAGE2",
 					...
 				]
 			},

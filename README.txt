@@ -35,8 +35,8 @@ INPUT FORMATTING
 	1) whitespace is not needed and
 	2) replace any word in ALL CAPS by an actual value
 	3) "..." indicates that this pattern can go on indefinitely. 
-	4) All times (00:00-00:00) are 24-hour based and must always have 4 
-		digits seperated by a ":"
+	4) All times (00:00-00:00) are 24-hour based and must always have 2 
+		digits for the hour separated by a ":" and then 2 digs for the minutes with a "-" between the start and end time
 
 	{
 		"Venues":[
@@ -120,7 +120,7 @@ CONSTRAINTS
 For every panel there are 4 assumed constraints:
 		
 Panelist constraint: 
-A panelist can’t be assigned to multiple locations at the same time. 
+A panelist can't be assigned to multiple locations at the same time. 
 
 Consecutive Panels Constraint:
 A panelist may not be assigned to three panels that are scheduled very close 
@@ -139,40 +139,40 @@ time is preferred.
 These are the available constraints that can be added to panels with these 
 exact formats: 
 PRIORITY ranges from 1 to 3. 1 = REQUIRED, 2 = VERY_IMPORTANT, 3 = DESIRED. 
-If a constraint has a priority of REQUIRED that is violated, the panel won’t 
+If a constraint has a priority of REQUIRED that is violated, the panel won't 
 be scheduled.  As the priority number increases, the importance of the 
 constraint decreases.
 
 What is between the quotes must be put instead of the CONSTRAINT above
 		
-“New-Panelist”: This constraint indicates that the panel includes a panelist who
+"New-Panelist": This constraint indicates that the panel includes a panelist who
 is new to the conference.
 		
-“Paired-Panelists”: This constraint is to prevent any two panelists from 
+"Paired-Panelists": This constraint is to prevent any two panelists from 
 appearing together twice or more in a single day.
 
 "Single-Category": This constraint is to prevent any panels having the same 
 category from appearing at the same time.
  
-“Max-Panels(MAX_NUMBER)”: This constraint is to prevent a panelist from 
+"Max-Panels(MAX_NUMBER)": This constraint is to prevent a panelist from 
 appearing more than the MAX_NUMBER of times per day. MAX_NUMBER should be 
 replaced with a number.
 
-“Min-Panels()”: This filter prioritizes scheduling panelists in days they 
-haven’t been assigned yet.
+"Min-Panels()": This filter prioritizes scheduling panelists in days they 
+haven't been assigned yet.
 		
-“Minimum-Capacity(MINIMUM_SIZE)”: This constraint is for the panel to be 
+"Minimum-Capacity(MINIMUM_SIZE)": This constraint is for the panel to be 
 scheduled at a room with at least size MINIMUM_SIZE. MAX_NUMBER should be 
 replaced with a number.
 		
-“Availability”: This constraint is to prevent a panel from being scheduled at a 
+"Availability": This constraint is to prevent a panel from being scheduled at a 
 time where one or more panelists on the panel are not available.
 		
-“Venue(VENUE_NAME)”: This constraint is to schedule a panel at the given 
+"Venue(VENUE_NAME)": This constraint is to schedule a panel at the given 
 VENUE_NAME. VENUE_NAME must be replaced by the name of the venue, and it must 
 be declared as a venue.
 		
-“Time(DAY_NUMBER;00:00)”: This constraint is to schedule a panel at the given 
+"Time(DAY_NUMBER;00:00)": This constraint is to schedule a panel at the given 
 time. DAY_NUMBER is the number of the day for the panel to be scheduled at. 
 
 
@@ -189,7 +189,7 @@ OUTPUT FORMAT
 				"Panel":"PANEL_NAME",
 					"Messages":[
 						"MESSAGE1",
-						“MESSAGE2“,
+						"MESSAGE2",
 						...
 					],
 				"Venue":"VENUE_NAME",
@@ -199,7 +199,7 @@ OUTPUT FORMAT
 				"Panel":"PANEL_NAME",
 					"Messages":[
 						"MESSAGE1",
-						“MESSAGE2“,
+						"MESSAGE2",
 						...
 					],
 				"Venue":"VENUE_NAME",
@@ -207,9 +207,9 @@ OUTPUT FORMAT
 			},
 			...
 		],
-		“Messages”:[ 
+		"Messages":[ 
 			"MESSAGE1",
-			“MESSAGE2“,
+			"MESSAGE2",
 			... 
 		],	
 		"Unscheduled":[
@@ -217,7 +217,7 @@ OUTPUT FORMAT
 				"Panel":"PANEL_NAME",
 				"Messages":[
 					"MESSAGE1",
-					“MESSAGE2“,
+					"MESSAGE2",
 					...
 				]
 			},
@@ -225,7 +225,7 @@ OUTPUT FORMAT
 				"Panel":"PANEL_NAME",
 				"Messages":[
 					"MESSAGE1",
-					“MESSAGE2“,
+					"MESSAGE2",
 					...
 				]
 			},

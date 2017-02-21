@@ -1,5 +1,7 @@
 package symposium;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,16 +35,49 @@ public class Parser {
 	 * 
 	 * @param inputFile
 	 *          the JSON file
+	 * @throws IOException 
+	 * @throws ParseException 
 	 */
-	public static void parse(String inputFile) {
+	public static void parse(String inputFile) throws IOException, ParseException {
 		JSONParser parser = new JSONParser();
 		JSONObject root = null;
+		FileReader input = null;
 		try {
-			root = (JSONObject) parser.parse(new FileReader(inputFile));
+			input = new FileReader(inputFile);
+			root = (JSONObject) parser.parse(input);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			throw e;
 		} catch (IOException e) {
 			e.printStackTrace();
+			throw e;
 		} catch (ParseException e) {
+			int errorPosition = e.getPosition();
+			int lineNumber = 0;
+			int charNumber = 0;
+			int lineCharNumber = 0;
+			String line = null;
+			try {
+				input = new FileReader(inputFile);
+				BufferedReader inputBufferedReader = new BufferedReader(input);
+				while  (charNumber < errorPosition && (line = inputBufferedReader.readLine()) != null) {
+					lineNumber++;
+					charNumber += line.length() + 1; // need to count the \n as a character
+				}
+				if (charNumber == errorPosition) {
+					lineNumber++;
+					lineCharNumber = 1;
+				} else {
+					lineCharNumber = line.length() + 1 - (charNumber - errorPosition) +1; // call the first position 1 and don't forget the \n character
+				}
+				inputBufferedReader.close();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+
+			System.err.println("Error Parsing JSON line " + lineNumber + " at character "+lineCharNumber+" !");
 			e.printStackTrace();
+			throw e;
 		}
 		initVenues(root);
 		initPanels(root);
@@ -140,8 +175,14 @@ public class Parser {
 			List<Range> panelist_times = new ArrayList<Range>();
 			for (Object time_slot : json_times) {
 				String panelist_time = (String) time_slot;
-				TimeRange timeRange = (TimeRange) TimeFormat.normalToAbsolute(panelist_time);
-				panelist_times.add(timeRange); //panelist_time
+				try {
+					TimeRange timeRange = (TimeRange) TimeFormat.normalToAbsolute(panelist_time);
+					panelist_times.add(timeRange); //panelist_time
+				} catch (IllegalArgumentException e) {
+					System.err.println("Parse error of "+ panelist_name +" at "+panelist_time);
+					throw e;
+				}
+
 			}
 			Range panelistTime = panelist_times.get(0).union(panelist_times);
 
@@ -152,6 +193,7 @@ public class Parser {
 		}
 
 		// Creating Panels
+		panel:
 		for (Object o : json_panels) {
 			JSONObject item = (JSONObject) o;
 			String panel_name = (String) item.get("name");
@@ -167,9 +209,16 @@ public class Parser {
 			List<String> names = new ArrayList<>();
 			List<Range> panelistAvailabilities = new ArrayList<>();
 
+			// looking up panelists schedules that are on the panel
 			for (Object panelist : panel_panelists) {
 				String name = (String) panelist;
+				// invalid panelist not found, give warning and schedule without this panelist
+				if (panelists.get(name) == null) {
+					ScheduleData.instance().addWarningMessage("Panel Error: " + panel_name + " Has an invalid panelist " + name);
+					continue panel;
+				}
 				names.add(name);
+				
 				panelistAvailabilities.add(panelists.get(name));
 				if (new_panelists.contains(name)) {
 					new_count += 1;
@@ -178,7 +227,7 @@ public class Parser {
 
 			Range panelAvailability = null;
 			if (panelistAvailabilities.size() > 0) {
-				panelAvailability = panelistAvailabilities.get(0).intersect(panelistAvailabilities);
+					panelAvailability = panelistAvailabilities.get(0).intersect(panelistAvailabilities);
 			}
 			if (panelAvailability == null) { // handle panels with no intersections
 				ScheduleData.instance()

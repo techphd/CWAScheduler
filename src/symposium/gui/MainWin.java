@@ -1,12 +1,17 @@
 package symposium.gui;
 
 import java.awt.Component;
+import java.awt.Font;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+
+import org.json.simple.parser.ParseException;
 
 import symposium.DummyScheduler;
 import symposium.Parser;
@@ -134,6 +139,8 @@ public class MainWin extends javax.swing.JFrame {
 
 	private void scheduleBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scheduleBtnActionPerformed
 		File f = new File(this.inputPathTxt.getText());
+		boolean errorFile=false;
+		String msgErrorHTML = "<html>";		
 		if (f.exists() && !f.isDirectory()) {
 			ScheduleData.deleteScheduleData();
 
@@ -145,21 +152,39 @@ public class MainWin extends javax.swing.JFrame {
 			diffValues[4] = 100; // panelist
 
 			// Reading parsing json files
-			Parser.parse(f.getAbsolutePath());
-			// Schedule data is initiated
+			try {
+				Parser.parse(f.getAbsolutePath());
+				
+				// Schedule data is initiated
+				DummyScheduler bs = new DummyScheduler(diffValues);
+				bs.makeSchedule();
+				//long elapsedTime = System.nanoTime() - initTime;
 
-			DummyScheduler bs = new DummyScheduler(diffValues);
-			bs.makeSchedule();
-			//long elapsedTime = System.nanoTime() - initTime;
+				// Print report
+				//System.out.println(Report.INSTANCE.toString());
+				//System.out.println(__debugStats());
+				//System.out.println("\n\n\nTIME= " + (elapsedTime/(double)1000000000) + " ± 0.05 s");
+				this.resultWindow.showSchedule();
 
-			// Print report
-			//System.out.println(Report.INSTANCE.toString());
-			//System.out.println(__debugStats());
-			//System.out.println("\n\n\nTIME= " + (elapsedTime/(double)1000000000) + " ± 0.05 s");
-			this.resultWindow.showSchedule();
+			} catch (IOException e) {
+				e.printStackTrace();
+				errorFile=true;
+				msgErrorHTML += "File &quot;<b>" + f.toString() + "</b>&quot; had issues being read<br />";
+			} catch (ParseException e) {
+				e.printStackTrace();
+				errorFile=true;
+				msgErrorHTML += "File &quot;<b>" + f.toString() + "</b>&quot; could not be parsed<br />";
+			}
 		} else {
-			JOptionPane.showMessageDialog(this, "File " + f.toString() + " does not exist", "Problem!",
-					JOptionPane.WARNING_MESSAGE);
+			errorFile=true;
+			msgErrorHTML += "File &quot;<b>" + f.toString() + "</b>&quot; does not exist<br />";
+		}
+		
+		if (errorFile) {
+			msgErrorHTML +="</html>";
+			JLabel msg = new JLabel (msgErrorHTML);
+			msg.setFont(new Font("serif", Font.PLAIN,14));
+			JOptionPane.showMessageDialog(this, msg, "Problem!", JOptionPane.WARNING_MESSAGE);
 		}
 	}//GEN-LAST:event_scheduleBtnActionPerformed
 
@@ -196,10 +221,6 @@ public class MainWin extends javax.swing.JFrame {
 	public static void main(String args[]) {
 		if (args.length > 0) {
 			File inFile = new File(args[0]);
-			if (!inFile.exists()) {
-				System.err.println("Error: cannot find " + args[0]);
-			}
-			//
 
 			int[] diffValues = new int[5];
 			diffValues[0] = 10;
@@ -209,18 +230,30 @@ public class MainWin extends javax.swing.JFrame {
 			diffValues[4] = 100; // panelist
 
 			// Reading parsing json files
-			Parser.parse(inFile.getAbsolutePath());
-			// Schedule data is initiated
+			try {
+				if (!inFile.exists()) {
+					throw new FileNotFoundException("cannot find " + args[0]);
+				}
 
-			DummyScheduler bs = new DummyScheduler(diffValues);
-			bs.makeSchedule();
-			//long elapsedTime = System.nanoTime() - initTime;
+				Parser.parse(inFile.getAbsolutePath());
+				// Schedule data is initiated
 
-			//
-			if (args.length > 1) {
-				MainWin.saveFile(null, new File(args[1]), Report.INSTANCE.toJson().toString());
-			} else {
-				System.out.println(Report.INSTANCE.toJson());
+				DummyScheduler bs = new DummyScheduler(diffValues);
+				bs.makeSchedule();
+				//long elapsedTime = System.nanoTime() - initTime;
+
+				//
+				if (args.length > 1) {
+					MainWin.saveFile(null, new File(args[1]), Report.INSTANCE.toJson().toString());
+				} else {
+					System.out.println(Report.INSTANCE.toJson());
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+				System.err.println(e.toString());
+			} catch (ParseException e) {
+				e.printStackTrace();
+				System.err.println("File &quot;<b>" + inFile.getAbsoluteFile() + "</b>&quot; could not be parsed<br />");
 			}
 		} else {
 			/* Set the Nimbus look and feel */
